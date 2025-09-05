@@ -216,7 +216,7 @@ app.post("/login", async (req, res) => {
             // { expiresIn: "1h" } // token expiry
           );
           res.cookie("token", token);
-          return res.redirect("/");
+          return res.redirect("/your-posts");
         } else {
           console.error("PassWord Wrong!");
           // return res.redirect("/login");
@@ -241,8 +241,6 @@ app.get("/post/delete/:postId", isLoggedIn, async (req, res) => {
       "profileImages",
       post.photo
     ); // adjust folder
-    console.log(filePath);
-
     fs.unlink(filePath, (err) => {
       if (err) {
         console.error("Error deleting file:", err);
