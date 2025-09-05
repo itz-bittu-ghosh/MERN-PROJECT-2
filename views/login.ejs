@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {},
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-100 dark:bg-gray-900 flex flex-col min-h-screen">
+    <%- include('partials/nav') %>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex items-center justify-center p-4">
+      <div
+        class="bg-white dark:bg-gray-800 p-8 rounded shadow-lg w-full max-w-md"
+      >
+        <h1
+          class="text-2xl md:text-3xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6"
+        >
+          Log In
+        </h1>
+        <% if (errorMag && errorMag.trim() !== "") { %>
+        <div
+          class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          role="alert"
+        >
+          <strong class="font-bold">Error!</strong>
+          <span class="block sm:inline"><%= errorMag %></span>
+          <button
+            onclick="this.parentElement.style.display='none'"
+            class="absolute top-1 right-2 text-red-700 font-bold"
+          >
+            &times;
+          </button>
+        </div>
+        <% } %>
+
+        <!-- Login Form -->
+        <form action="/login" method="POST" class="space-y-4">
+          <!-- Email -->
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 mb-1"
+              >Email</label
+            >
+            <input
+              type="email"
+              name="email"
+              value="<%= typeof email !== 'undefined' ? email : '' %>"
+              required
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+            />
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="block text-gray-700 dark:text-gray-300 mb-1"
+              >Password</label
+            >
+            <input
+              type="password"
+              name="password"
+              required
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <div>
+            <button
+              type="submit"
+              class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
+            >
+              LogIn
+            </button>
+          </div>
+        </form>
+
+        <!-- Links -->
+        <div class="mt-6 text-center text-sm text-gray-600 dark:text-gray-300">
+          Created an account?
+          <a href="/signup" class="text-blue-600 hover:underline">Signup</a> |
+          <a href="/" class="text-gray-700 dark:text-gray-200 hover:underline"
+            >Go to Home</a
+          >
+        </div>
+      </div>
+    </main>
+    <script>
+      if (localStorage.getItem("darkMode") === "enabled") {
+        document.documentElement.classList.add("dark");
+      }
+
+      const toggle = document.getElementById("darkToggle");
+      toggle.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+
+        // Save state in localStorage
+        if (document.documentElement.classList.contains("dark")) {
+          localStorage.setItem("darkMode", "enabled");
+        } else {
+          localStorage.setItem("darkMode", "disabled");
+        }
+      });
+    </script>
+  </body>
+</html>

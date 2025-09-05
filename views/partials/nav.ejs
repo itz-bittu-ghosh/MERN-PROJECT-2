@@ -1,0 +1,55 @@
+<!-- Navbar -->
+<nav class="w-full bg-white dark:bg-gray-800 shadow-md fixed">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+    <!-- Left side (Logo / Home) -->
+    <div>
+      <a
+        href="/"
+        class="text-xl font-bold text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 <%= currentPage === 'home' ? 'underline' : '' %>"
+      >
+        Home
+      </a>
+      <% if (isUserLoggedIn) { %>
+      <a
+        href="/your-posts"
+        class="text-xl font-bold text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 ml-4  <%= currentPage === 'your-posts' ? 'underline' : '' %>"
+      >
+        Your Posts
+      </a>
+      <% } %>
+    </div>
+
+    <!-- Right side (Links + Toggle) -->
+    <div class="flex items-center space-x-4">
+      <% if (isUserLoggedIn) { %>
+      <a
+        href="/logout"
+        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+      >
+        Logout
+      </a>
+      <% } else { %>
+      <a
+        href="/login"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        Login
+      </a>
+      <a
+        href="/signup"
+        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition "
+      >
+        Signup
+      </a>
+      <% } %>
+
+      <!-- Dark Mode Toggle Button inside nav -->
+      <button
+        id="darkToggle"
+        class="bg-gray-700 text-white p-2 rounded-full shadow hover:bg-gray-600 transition"
+      >
+        🌓
+      </button>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Terms & Conditions — Dummy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: 'class', theme: { extend: {} } }
+    </script>
+  </head>
+  <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+    <header class="max-w-4xl mx-auto p-6 flex items-center justify-between">
+      <h1 class="text-2xl font-bold">Example App — Terms & Conditions</h1>
+      <div class="flex items-center space-x-3">
+        <button id="darkToggle" class="px-3 py-1 rounded bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900">🌓</button>
+        <a href="/" class="text-sm underline">Home</a>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow p-6 md:p-10 mb-12">
+      <section class="mb-6">
+        <h2 class="text-xl md:text-2xl font-semibold mb-2">Terms & Conditions (Dummy)</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-300">Last updated: <strong>September 3, 2025</strong></p>
+      </section>
+
+      <section class="prose prose-sm dark:prose-invert max-w-none mb-6">
+        <h3>1. Introduction</h3>
+        <p>
+          These Terms & Conditions ("Terms") govern your use of the Example App website and services. This is a <strong>dummy</strong> document provided for demonstration purposes only and does not create any legal obligations.
+        </p>
+
+        <h3>2. Acceptance of Terms</h3>
+        <p>
+          By accessing or using our services, you agree to be bound by these Terms. If you do not agree, please do not use the site.
+        </p>
+
+        <h3>3. Use of Service</h3>
+        <p>
+          You may use the service for lawful purposes only. You agree not to misuse the service or attempt to access other accounts or systems without authorization.
+        </p>
+
+        <h3>4. User Content</h3>
+        <p>
+          You are responsible for any content you create, upload, post, or otherwise make available through the service. We do not claim ownership of your content.
+        </p>
+
+        <h3>5. Accounts & Security</h3>
+        <p>
+          You are responsible for maintaining the confidentiality of your account credentials. Notify us immediately if you suspect unauthorized access.
+        </p>
+
+        <h3>6. Termination</h3>
+        <p>
+          We reserve the right to suspend or terminate access to the service at any time, without prior notice, for conduct that violates these Terms or for other legitimate reasons.
+        </p>
+
+        <h3>7. Limitation of Liability</h3>
+        <p>
+          In no event shall Example App or its affiliates be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of (or inability to use) the service.
+        </p>
+
+        <h3>8. Changes to Terms</h3>
+        <p>
+          We may update these Terms from time to time. The "Last updated" date above will indicate when changes were made. Continued use after changes constitutes acceptance of the revised Terms.
+        </p>
+
+        <h3>9. Contact</h3>
+        <p>
+          For questions about these Terms, please contact us at <a href="mailto:hello@example.com" class="text-blue-600 hover:underline">hello@example.com</a>.
+        </p>
+
+        <hr class="my-4"/>
+
+        <h3>Simple Examples / Placeholder Clauses</h3>
+        <ul>
+          <li><strong>Governing Law:</strong> These Terms are governed by the laws of the jurisdiction in which the service provider operates.</li>
+          <li><strong>Severability:</strong> If any provision is found invalid, the remainder shall continue in effect.</li>
+          <li><strong>No Waiver:</strong> Failure to enforce a right is not a waiver of that right.</li>
+        </ul>
+      </section>
+
+      <section class="mt-6">
+        <form id="acceptForm" action="/" method="GET" class="flex flex-col md:flex-row md:items-center md:space-x-4">
+          <label class="flex items-center space-x-3">
+            <input id="acceptCheckbox" type="checkbox" class="h-4 w-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-400"/>
+            <span class="text-sm text-gray-700 dark:text-gray-300">I have read and agree to the Terms & Conditions</span>
+          </label>
+
+          <div class="flex items-center space-x-3 mt-4 md:mt-0">
+            <button id="acceptBtn" disabled class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md cursor-not-allowed">Accept</button>
+            <button type="button" id="printBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Print</button>
+          </div>
+        </form>
+
+        <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">This is a dummy terms page for UI/testing. Replace with your actual legal terms before going live.</p>
+      </section>
+    </main>
+
+    <footer class="max-w-4xl mx-auto text-center text-sm text-gray-600 dark:text-gray-400 mb-12">
+      © Example App • Dummy Terms & Conditions
+    </footer>
+
+    <script>
+      // Dark mode toggle
+      const dm = document.getElementById('darkToggle');
+      dm.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+      });
+
+      // Accept button enable/disable
+      const checkbox = document.getElementById('acceptCheckbox');
+      const acceptBtn = document.getElementById('acceptBtn');
+      checkbox.addEventListener('change', () => {
+        acceptBtn.disabled = !checkbox.checked;
+        acceptBtn.classList.toggle('bg-blue-600', checkbox.checked);
+        acceptBtn.classList.toggle('text-white', checkbox.checked);
+        acceptBtn.classList.toggle('cursor-not-allowed', !checkbox.checked);
+      });
+
+      // Print
+      document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+      // Optional: prevent form submission if not checked (extra safety)
+      document.getElementById('acceptForm').addEventListener('submit', (e) => {
+        if (!checkbox.checked) {
+          e.preventDefault();
+          alert('Please agree to the Terms & Conditions before continuing.');
+        }
+      });
+    </script>
+  </body>
+</html>
