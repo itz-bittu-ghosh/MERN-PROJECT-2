@@ -61,7 +61,7 @@
         >
           <a
             href="/like-post/<%= post._id %>"
-            class="likeBtn flex items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition cursor-pointer"
+            class="likeBtn flex items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition  text-[20px] cursor-pointer"
           >
             ❤️
             <span class="likeCount ml-1"><%= post.likedUserId.length %></span>
@@ -87,6 +87,9 @@
           }
         });
       }
+        const urlParams = new URLSearchParams(window.location.search);
+  const msg = urlParams.get("msg");
+  if (msg) alert(msg);
     </script>
   </body>
 </html>

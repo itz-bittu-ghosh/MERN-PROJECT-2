@@ -1,48 +1,71 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Posts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: { extend: {} },
+      };
+    </script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>My Posts</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: { extend: {} },
-    };
-  </script>
-</head>
-
-<body class="bg-gray-100 dark:bg-gray-900 flex flex-col min-h-screen">
-  <!-- Navbar -->
-  <%- include('partials/nav') %>
+  <body class="bg-gray-100 dark:bg-gray-900 flex flex-col min-h-screen">
+    <!-- Navbar -->
+    <%- include('partials/nav') %>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col items-center justify-start p-4 space-y-6 w-full mt-12">
+    <main
+      class="flex-1 flex flex-col items-center justify-start p-4 space-y-6 w-full mt-12"
+    >
       <!-- Add Post Form -->
-      <div class="bg-white dark:bg-gray-800 p-8 rounded shadow-md w-full max-w-2xl mt-4">
-        <div class="h-[200px] w-full overflow-hidden mb-2 dark:border-white border-2 border-gray-700">
-          <img src="/profileImages/<%= user[0].photo %>" alt="Profile photo" class="h-full w-full object-cover" />
+      <div
+        class="bg-white dark:bg-gray-800 p-8 rounded shadow-md w-full max-w-2xl mt-4"
+      >
+        <div
+          class="h-[200px] w-full overflow-hidden mb-2 dark:border-white border-2 border-gray-700"
+        >
+          <img
+            src="/profileImages/<%= user[0].photo %>"
+            alt="Profile photo"
+            class="h-full w-full object-cover"
+          />
         </div>
 
-        <h1 class="text-3xl md:text-4xl font-bold text-blue-700 dark:text-blue-400 mb-2">
+        <h1
+          class="text-3xl md:text-4xl font-bold text-blue-700 dark:text-blue-400 mb-2"
+        >
           Hey, <%= user[0].firstName %> 👋
         </h1>
         <p class="text-gray-600 dark:text-gray-300 mb-4 text-lg">
           Share your thoughts and moments ✨
         </p>
 
-        <form id="postForm" class="space-y-4"
-          action=" <%= willBeEdited ? '/update-post/'+ willBeEdited._id : '/add-post' %>" method="POST"
-          enctype="multipart/form-data">
-          <input type="file" name="photo"
+        <form
+          id="postForm"
+          class="space-y-4"
+          action=" <%= willBeEdited ? '/update-post/'+ willBeEdited._id : '/add-post' %>"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <input
+            type="file"
+            name="photo"
             class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
-            required value="<%= willBeEdited ? willBeEdited.photo : '' %>" />
-          <textarea name="about" placeholder="Write something about this post..."
+            required
+          />
+          <textarea
+            name="about"
+            placeholder="Write something about this post..."
             class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
-            required><%= willBeEdited ? willBeEdited.about : '' %></textarea>
-          <button type="submit"
-            class="text-white px-4 py-2 rounded-md transition w-full <%= willBeEdited ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700' %>">
+            required
+          ><%= willBeEdited ? willBeEdited.about : '' %></textarea>
+          <button
+            type="submit"
+            class="text-white px-4 py-2 rounded-md transition w-full <%= willBeEdited ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700' %>"
+          >
             <%= willBeEdited ? "Update Post" : "Add Post" %>
           </button>
         </form>
@@ -55,50 +78,67 @@
           Total Posts: <%= userPosts.length %>
         </h2>
         <% userPosts.reverse().forEach(post=> { %>
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-            <div class="flex items-center px-4 py-3">
-              <img class="h-10 w-10 rounded-full object-cover" src="/profileImages/<%= user[0].photo %>"
-                alt="User profile" />
-              <div class="ml-3">
-                <h2 class="text-gray-800 dark:text-gray-100 font-semibold">
-                  @<%= user[0].firstName.toLowerCase() %>
-                </h2>
-                <p class="text-gray-500 dark:text-gray-400 text-sm">
-                  <%= post.date.toDateString() %>
-                </p>
-              </div>
-            </div>
-            <img class="w-full h-64 object-cover" src="/profileImages/<%= post.photo %>" alt="Post photo" />
-            <div class="px-4 py-3">
-              <p class="text-gray-700 dark:text-gray-300 text-sm">
-                <%= post.about %>
+        <div
+          class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+        >
+          <div class="flex items-center px-4 py-3">
+            <img
+              class="h-10 w-10 rounded-full object-cover"
+              src="/profileImages/<%= user[0].photo %>"
+              alt="User profile"
+            />
+            <div class="ml-3">
+              <h2 class="text-gray-800 dark:text-gray-100 font-semibold">
+                @<%= user[0].firstName.toLowerCase() %>
+              </h2>
+              <p class="text-gray-500 dark:text-gray-400 text-sm">
+                <%= post.date.toDateString() %>
               </p>
             </div>
-            <div class="px-4 py-2 flex items-center justify-between space-x-4 border-t dark:border-gray-700">
-              <a href="/like-post/<%= post._id %>?likedFromProfile_dask=ture"
-                class="likeBtn flex items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition cursor-pointer">
-                ❤️
-                <span class="likeCount ml-1">
-                  <%= post.likedUserId.length%>
-                </span>
+          </div>
+          <img
+            class="w-full h-64 object-cover"
+            src="/profileImages/<%= post.photo %>"
+            alt="Post photo"
+          />
+          <div class="px-4 py-3">
+            <p class="text-gray-700 dark:text-gray-300 text-sm">
+              <%= post.about %>
+            </p>
+          </div>
+          <div
+            class="px-4 py-2 flex items-center justify-between space-x-4 border-t dark:border-gray-700"
+          >
+            <a
+              href="/like-post/<%= post._id %>?likedFromProfile_dask=ture"
+              class="likeBtn flex items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition cursor-pointer text-[20px]"
+            >
+              ❤️
+              <span class="likeCount ml-1">
+                <%= post.likedUserId.length%>
+              </span>
+            </a>
+            <div class="flex gap-4">
+              <!-- Edit -->
+              <a
+                href="/post/edit/<%= post._id %>"
+                class="flex items-center hover:bg-green-600 bg-green-700 text-white px-4 py-2"
+              >
+                Edit
               </a>
-              <div class="flex gap-4">
-                <!-- Edit -->
-                <a href="/post/edit/<%= post._id %>"
-                  class="flex items-center hover:bg-green-600 bg-green-700 text-white px-4 py-2">
-                  Edit
-                </a>
 
-                <!-- Delete -->
-                <a href="/post/delete/<%= post._id %>"
-                  class="flex items-center hover:bg-red-600 bg-red-700 text-white px-4 py-2">
-                  Delete
-                </a>
-              </div>
+              <!-- Delete -->
+              <a
+                href="/post/delete/<%= post._id %>"
+                class="flex items-center hover:bg-red-600 bg-red-700 text-white px-4 py-2"
+              >
+                Delete
+              </a>
             </div>
           </div>
+        </div>
 
-          <% }) %>
+        <% }) %>
       </div>
     </main>
 
@@ -119,6 +159,5 @@
         });
       }
     </script>
-</body>
-
+  </body>
 </html>

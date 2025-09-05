@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const { check, validationResult } = require("express-validator");
-
+const fs = require("fs");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
@@ -60,14 +60,20 @@ app.post(
   async (req, res) => {
     const { about } = req.body;
     const photo = req.file ? req.file.filename : "default.png";
-
-    const newPost = new PostModel({
-      photo,
-      about,
-      user: req.user.userId,
-    });
-    await newPost.save();
-    res.redirect("/your-posts");
+    const logUserPosts = await PostModel.find({ user: req.user.userId });
+    if (logUserPosts.length <= 2) {
+      const newPost = new PostModel({
+        photo,
+        about,
+        user: req.user.userId,
+      });
+      await newPost.save();
+      res.redirect("/your-posts");
+    } else {
+      res.send(
+        "You will post maximum 3 posts...If you want to post farther then delete previous one!!!"
+      );
+    }
   }
 );
 app.get("/login", (req, res) => {
@@ -159,7 +165,11 @@ app.post(
     try {
       const termsAccepted = terms === "on";
       const existingUser = await UserModel.find();
-      if (existingUser.length <= 3) {
+      // console.log("Total User: ",existingUser.length);
+      // res.render("your-posts", );
+
+      // User Limit set
+      if (existingUser.length <= 2) {
         // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
@@ -175,9 +185,9 @@ app.post(
         });
 
         await newUser.save();
-        res.redirect("/");
+        res.redirect("/login?msg=Account+created+successfully");
       } else {
-        res.send("Maxium users reach plz contact with admin.");
+       res.redirect("/?msg=Maximum+users+reached+plz+contact+with+admin!!!");
       }
     } catch (err) {
       console.error(err);
@@ -218,8 +228,28 @@ app.post("/login", async (req, res) => {
     );
   }
 });
-app.get("/post/delete/:postId", async (req, res) => {
+app.get("/post/delete/:postId", isLoggedIn, async (req, res) => {
   const postId = req.params.postId;
+  const post = await PostModel.findById(postId);
+  //  console.log(post);
+
+  if (post.photo) {
+    const filePath = path.join(
+      __dirname,
+      "public",
+      "profileImages",
+      post.photo
+    ); // adjust folder
+    console.log(filePath);
+
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error("Error deleting file:", err);
+      } else {
+        console.log("File deleted:", filePath);
+      }
+    });
+  }
   await PostModel.findOneAndDelete({ _id: postId });
   res.redirect("/your-posts");
 });
