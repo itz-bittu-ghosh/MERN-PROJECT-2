@@ -70,9 +70,10 @@ app.post(
       await newPost.save();
       res.redirect("/your-posts");
     } else {
-      res.send(
-        "You will post maximum 3 posts...If you want to post farther then delete previous one!!!"
-      );
+res.redirect(
+  "/your-posts?msg=You+will+post+maximum+3+posts...If+you+want+to+post+farther+then+delete+previous+one!!!"
+);
+
     }
   }
 );
