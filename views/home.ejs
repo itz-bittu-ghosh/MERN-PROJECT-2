@@ -1,74 +1,64 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      // Enable dark mode via class
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {},
-        },
-      };
-    </script>
-  </head>
 
-  <body class="bg-gray-100 dark:bg-gray-900 flex flex-col min-h-screen ">
-    <%- include('partials/nav') %>
+<head>
+  <meta charset="UTF-8" />
+  <title>Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Enable dark mode via class
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {},
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 flex flex-col min-h-screen">
+  <%- include('partials/nav') %>
 
     <!-- Main Content -->
     <main class="flex-1 flex flex-col items-center justify-start p-4 space-y-6 mt-12">
       <% allPosts.reverse().forEach(function(post) { %>
 
-      <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[600px]  overflow-hidden mt-4"
-      >
-        <!-- Post Header -->
-        <div class="flex items-center px-4 py-3">
-          <img
-            class="h-10 w-10 rounded-full object-cover"
-            src="profileImages/<%= post.user.photo %>"
-            alt="User profile"
-          />
-          <div class="ml-3">
-            <h2 class="text-gray-800 dark:text-gray-100 font-semibold">
-              <a href="/profile/<%= post.user._id %>">
-                @<%= post.user.firstName.toLowerCase() %>
-              </a>
-            </h2>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">
-              <%= post.date.toDateString() %>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[600px] overflow-hidden mt-4">
+          <!-- Post Header -->
+          <div class="flex items-center px-4 py-3">
+            <img class="h-10 w-10 rounded-full object-cover postPhoto" src="profileImages/<%= post.user.photo %>"
+              alt="User profile" />
+            <div class="ml-3">
+              <h2 class="text-gray-800 dark:text-gray-100 font-semibold">
+                <a href="/profile/<%= post.user._id %>">
+                  @<%= post.user.firstName.toLowerCase() %>
+                </a>
+              </h2>
+              <p class="text-gray-500 dark:text-gray-400 text-sm">
+                <%= post.date.toDateString() %>
+              </p>
+            </div>
+          </div>
+          <!-- Post Image -->
+          <img class="w-full h-64 object-cover postImage" src="profileImages/<%= post.photo %>" alt="Post photo" />
+          <!-- Post Body -->
+          <div class="px-4 py-3">
+            <p class="text-gray-700 dark:text-gray-300 text-sm">
+              <%= post.about %>
             </p>
           </div>
+          <!-- Post Actions -->
+          <div class="px-4 py-2 flex items-center space-x-4 border-t dark:border-gray-700">
+            <a href="/like-post/<%= post._id %>"
+              class="likeBtn flex items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition text-[20px] cursor-pointer">
+              ❤️
+              <span class="likeCount ml-1">
+                <%= post.likedUserId.length %>
+              </span>
+            </a>
+          </div>
         </div>
-        <!-- Post Image -->
-        <img
-          class="w-full h-64 object-cover"
-          src="profileImages/<%= post.photo %>"
-          alt="Post photo"
-        />
-        <!-- Post Body -->
-        <div class="px-4 py-3">
-          <p class="text-gray-700 dark:text-gray-300 text-sm">
-            <%= post.about %>
-          </p>
-        </div>
-        <!-- Post Actions -->
-        <div
-          class="px-4 py-2 flex items-center space-x-4 border-t dark:border-gray-700"
-        >
-          <a
-            href="/like-post/<%= post._id %>"
-            class="likeBtn flex items-center text-gray-600 dark:text-gray-300 hover:text-red-500 transition  text-[20px] cursor-pointer"
-          >
-            ❤️
-            <span class="likeCount ml-1"><%= post.likedUserId.length %></span>
-          </a>
-        </div>
-      </div>
-      <% }) %>
+        <% }) %>
     </main>
 
     <script>
@@ -87,9 +77,28 @@
           }
         });
       }
-        const urlParams = new URLSearchParams(window.location.search);
-  const msg = urlParams.get("msg");
-  if (msg) alert(msg);
+      const urlParams = new URLSearchParams(window.location.search);
+      const msg = urlParams.get("msg");
+      if (msg) alert(msg);
+
+      const postPhotos = document.querySelectorAll(".postImage");
+      postPhotos.forEach((photo) => {
+        photo.addEventListener("dblclick", function () {
+          const modal = document.createElement("div");
+          modal.className =
+            "fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50";
+
+          const modalImg = document.createElement("img");
+          modalImg.src = this.src;
+          modalImg.className = "max-h-[90vh] max-w-[90vw] rounded-lg shadow-lg";
+
+          modal.appendChild(modalImg);
+          document.body.appendChild(modal);
+
+          modal.addEventListener("click", () => modal.remove());
+        });
+      });
     </script>
-  </body>
+</body>
+
 </html>
