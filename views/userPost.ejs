@@ -28,7 +28,7 @@
           class="h-[200px] w-full overflow-hidden mb-2 dark:border-white border-2 border-gray-700"
         >
           <img
-            src="/profileImages/<%= user[0].photo %>"
+            src="<%= user[0].photo %>"
             alt="Profile photo"
             class="h-full w-full object-cover postImage"
           />
@@ -87,7 +87,7 @@
           <div class="flex items-center px-4 py-3">
             <img
               class="h-10 w-10 rounded-full object-cover"
-              src="/profileImages/<%= user[0].photo %>"
+              src="<%= user[0].photo %>"
               alt="User profile"
             />
             <div class="ml-3">
@@ -101,7 +101,7 @@
           </div>
           <img
             class="w-full h-64 object-cover postImage"
-            src="/profileImages/<%= post.photo %>"
+            src="<%= post.photo %>"
             alt="Post photo"
           />
           <div class="px-4 py-3">

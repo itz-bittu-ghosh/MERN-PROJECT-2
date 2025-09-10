@@ -10,28 +10,39 @@ const { check, validationResult } = require("express-validator");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
+const cloudinary = require("cloudinary").v2;
+const multer = require("multer");
 
 mongoose.connect(process.env.MONGO_URI);
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET, 
+});
+
+// Upload an image
+async function uploadFile(filePath) {
+  const uploadResult = await cloudinary.uploader.upload(filePath, {
+    folder: "Mini FaceBook", // optional folder
+  });
+  return uploadResult;
+}
+
+const storage = multer.diskStorage({
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+const uploadFiles = multer({ storage });
 
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(cookieParser());
-
-const multer = require("multer");
-
-const profileStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/profileImages");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + ext);
-  },
-});
-const profileUpload = multer({ storage: profileStorage });
-
 app.use(express.static(path.join(__dirname, "public")));
 
 // 🔹 Add this BEFORE your routes
@@ -56,24 +67,24 @@ app.get("/terms", (req, res) => {
 app.post(
   "/add-post",
   isLoggedIn,
-  profileUpload.single("photo"),
+  uploadFiles.single("photo"),
   async (req, res) => {
     const { about } = req.body;
-    const photo = req.file ? req.file.filename : "default.png";
+  const photo = req.file.path;
+  const photoURI = await uploadFile(photo);
     const logUserPosts = await PostModel.find({ user: req.user.userId });
     if (logUserPosts.length <= 2) {
       const newPost = new PostModel({
-        photo,
+        photo : photoURI.secure_url,
         about,
         user: req.user.userId,
       });
       await newPost.save();
       res.redirect("/your-posts");
     } else {
-res.redirect(
-  "/your-posts?msg=You+will+post+maximum+3+posts...If+you+want+to+post+farther+then+delete+previous+one!!!"
-);
-
+      res.redirect(
+        "/your-posts?msg=You+will+post+maximum+3+posts...If+you+want+to+post+farther+then+delete+previous+one!!!"
+      );
     }
   }
 );
@@ -101,7 +112,7 @@ app.get("/signup", (req, res) => {
 
 app.post(
   "/signup",
-  profileUpload.single("profilePhoto"),
+  uploadFiles.single("profilePhoto"),
   // Validation chain
   check("firstName")
     .trim()
@@ -174,21 +185,22 @@ app.post(
         // Hash password
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
-        const photo = req.file ? req.file.filename : "default.png";
+        const photo = req.file.path;
+        const photoURI = await uploadFile(photo);
         // Save user
         const newUser = new UserModel({
           firstName,
           lastName,
           email,
           password: hashPassword,
-          photo,
+          photo: photoURI.secure_url,
           termsAccepted,
         });
 
         await newUser.save();
         res.redirect("/login?msg=Account+created+successfully");
       } else {
-       res.redirect("/?msg=Maximum+users+reached+plz+contact+with+admin!!!");
+        res.redirect("/?msg=Maximum+users+reached+plz+contact+with+admin!!!");
       }
     } catch (err) {
       console.error(err);
@@ -290,15 +302,16 @@ app.get("/post/edit/:postId", isLoggedIn, async (req, res) => {
 app.post(
   "/update-post/:postId",
   isLoggedIn,
-  profileUpload.single("photo"),
+  uploadFiles.single("photo"),
   async (req, res) => {
     const { about } = req.body;
-    const photo = req.file ? req.file.filename : "default.png";
+  const photo = req.file.path;
+  const photoURI = await uploadFile(photo);
 
     const postId = req.params.postId;
     await PostModel.findOneAndUpdate(
       { _id: postId },
-      { photo, about },
+      { photo : photoURI.secure_url , about },
       { new: true, runValidators: true }
     );
     res.redirect("/your-posts");
